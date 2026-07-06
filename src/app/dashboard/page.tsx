@@ -25,9 +25,9 @@ export default async function DashboardPage() {
       <main className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6">
         <section className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
           <div>
-            <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-300">360 worship - IBC</p>
-            <h1 className="mt-2 text-3xl font-semibold text-white sm:text-5xl">Listos para servir con excelencia</h1>
-            <p className="mt-3 max-w-2xl text-slate-400">Eventos, canciones y tonos del equipo en un mismo lugar, para llegar al ensayo con el corazon y la lista preparados.</p>
+            <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-300">EVENTOS WORSHIP 360</p>
+            <h1 className="mt-2 text-3xl font-semibold text-white sm:text-5xl">Colosenses 3:23</h1>
+            <p className="mt-3 max-w-2xl text-slate-400">Trabajen de buena gana en todo lo que hagan, como si fuera para el Señor y no para la gente.</p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
             {isAdmin ? <Link href="/events/new" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-emerald-400 px-4 font-medium text-slate-950"><CalendarPlus size={19} />Agregar evento</Link> : null}
