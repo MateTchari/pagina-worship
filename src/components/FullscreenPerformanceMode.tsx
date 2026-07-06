@@ -24,7 +24,7 @@ export function FullscreenPerformanceMode({ event }: { event: WorshipEvent }) {
 
   return (
     <main className="min-h-screen bg-[#070808] text-white">
-      <div className="mx-auto flex min-h-screen max-w-5xl flex-col px-4 py-5 sm:px-6">
+      <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-5 sm:px-6">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
           <div>
             <p className="text-sm text-emerald-300">{event.title} · {active?.sectionName}</p>
@@ -42,7 +42,7 @@ export function FullscreenPerformanceMode({ event }: { event: WorshipEvent }) {
           </div>
         </div>
         <div className={autoScroll ? "animate-[scrollSlow_50s_linear_infinite]" : ""}>
-          {active ? <ChordProViewer content={active.song.lyrics_chords} semitones={semitones} fontSize={fontSize} showChords={showChords} /> : <p className="text-slate-400">Este evento no tiene canciones.</p>}
+          {active ? <ChordProViewer content={active.song.lyrics_chords} semitones={semitones} fontSize={fontSize} showChords={showChords} columns={2} /> : <p className="text-slate-400">Este evento no tiene canciones.</p>}
         </div>
       </div>
     </main>

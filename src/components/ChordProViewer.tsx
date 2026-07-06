@@ -8,12 +8,14 @@ export function ChordProViewer({
   semitones = 0,
   fontSize = 22,
   showChords = true,
+  columns = 1,
   controls,
 }: {
   content: string;
   semitones?: number;
   fontSize?: number;
   showChords?: boolean;
+  columns?: 1 | 2;
   controls?: {
     increase: () => void;
     decrease: () => void;
@@ -31,9 +33,9 @@ export function ChordProViewer({
           {controls.fullscreen ? <button title="Pantalla completa" onClick={controls.fullscreen} className="rounded-lg bg-white/10 p-2 text-white hover:bg-white/20"><Maximize size={18} /></button> : null}
         </div>
       ) : null}
-      <div className="space-y-4 font-mono leading-relaxed text-slate-100" style={{ fontSize }}>
+      <div className={`font-mono leading-relaxed text-slate-100 ${columns === 2 ? "columns-1 gap-8 md:columns-2" : "space-y-4"}`} style={{ fontSize }}>
         {parsed.map((line, lineIndex) => (
-          <div key={`${line.raw}-${lineIndex}`} className="flex flex-wrap items-end gap-x-1 gap-y-2">
+          <div key={`${line.raw}-${lineIndex}`} className={`flex flex-wrap items-end gap-x-1 gap-y-2 ${columns === 2 ? "mb-4 break-inside-avoid" : ""}`}>
             {line.parts.map((part, index) => (
               <span key={`${part.chord}-${part.lyric}-${index}`} className="inline-flex flex-col">
                 {showChords && part.chord ? <span className="text-[1.12em] font-bold leading-none text-emerald-300">{part.chord}</span> : null}
