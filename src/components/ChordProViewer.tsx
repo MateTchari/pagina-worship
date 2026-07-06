@@ -36,7 +36,7 @@ export function ChordProViewer({
           <div key={`${line.raw}-${lineIndex}`} className="flex flex-wrap items-end gap-x-1 gap-y-2">
             {line.parts.map((part, index) => (
               <span key={`${part.chord}-${part.lyric}-${index}`} className="inline-flex flex-col">
-                {showChords && part.chord ? <span className="text-[0.72em] font-bold leading-none text-emerald-300">{part.chord}</span> : null}
+                {showChords && part.chord ? <span className="text-[1.12em] font-bold leading-none text-emerald-300">{part.chord}</span> : null}
                 <span className="whitespace-pre-wrap">{part.lyric || " "}</span>
               </span>
             ))}
