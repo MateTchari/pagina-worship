@@ -14,6 +14,9 @@ export function FullscreenPerformanceMode({ event }: { event: WorshipEvent }) {
   const [autoScroll, setAutoScroll] = useState(false);
   const active = songs[index];
   const semitones = active ? semitoneDistance(active.song.default_key, active.selected_key) : 0;
+  const minFontSize = 10;
+  const maxFontSize = 64;
+  const fontStep = 5;
 
   function requestFullscreen() {
     document.documentElement.requestFullscreen?.();
@@ -31,8 +34,8 @@ export function FullscreenPerformanceMode({ event }: { event: WorshipEvent }) {
           <div className="flex flex-wrap gap-2">
             <button title="Canción anterior" onClick={() => setIndex(Math.max(0, index - 1))} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><ChevronLeft size={20} /></button>
             <button title="Siguiente canción" onClick={() => setIndex(Math.min(songs.length - 1, index + 1))} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><ChevronRight size={20} /></button>
-            <button title="Disminuir letra" onClick={() => setFontSize(Math.max(18, fontSize - 2))} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><Minus size={20} /></button>
-            <button title="Aumentar letra" onClick={() => setFontSize(Math.min(48, fontSize + 2))} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><Plus size={20} /></button>
+            <button title="Disminuir letra" onClick={() => setFontSize(Math.max(minFontSize, fontSize - fontStep))} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><Minus size={20} /></button>
+            <button title="Aumentar letra" onClick={() => setFontSize(Math.min(maxFontSize, fontSize + fontStep))} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><Plus size={20} /></button>
             <button title="Mostrar u ocultar acordes" onClick={() => setShowChords(!showChords)} className="rounded-lg bg-white/10 p-3 hover:bg-white/20">{showChords ? <Eye size={20} /> : <EyeOff size={20} />}</button>
             <button title="Scroll automático" onClick={() => setAutoScroll(!autoScroll)} className={`rounded-lg p-3 hover:bg-white/20 ${autoScroll ? "bg-emerald-400 text-slate-950" : "bg-white/10"}`}><Play size={20} /></button>
             <button title="Pantalla completa" onClick={requestFullscreen} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><Maximize size={20} /></button>
