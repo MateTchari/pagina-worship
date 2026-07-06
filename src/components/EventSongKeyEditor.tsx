@@ -19,10 +19,10 @@ export function EventSongKeyEditor({ eventSongId, initialKey }: { eventSongId: s
 
     try {
       await updateEventSong(eventSongId, { selected_key: selectedKey.trim() });
-      setMessage("Guardado");
+      setMessage("Tono listo");
       router.refresh();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo guardar.");
+      setMessage(error instanceof Error ? error.message : "No pudimos guardar ese tono.");
     } finally {
       setLoading(false);
     }

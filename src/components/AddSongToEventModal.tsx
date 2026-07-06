@@ -68,7 +68,7 @@ export function AddSongToEventModal({
       closeAndReset();
       router.refresh();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudieron agregar las canciones.");
+      setMessage(error instanceof Error ? error.message : "No pudimos sumar esas canciones al set. Intentemos otra vez.");
     } finally {
       setLoading(false);
     }
@@ -81,17 +81,17 @@ export function AddSongToEventModal({
       <div className="w-full max-w-3xl rounded-lg border border-white/10 bg-[#171a1d] p-4">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-white">Agregar canciones</h2>
+            <h2 className="text-xl font-semibold text-white">Armar el set</h2>
             <p className="text-sm text-slate-400">{section.name}</p>
           </div>
           <button title="Cerrar" onClick={closeAndReset} className="rounded-lg bg-white/10 p-2 text-white"><X size={18} /></button>
         </div>
 
         {songs.length === 0 ? (
-          <p className="rounded-lg bg-amber-400/10 p-3 text-sm text-amber-100">Primero carga canciones en la biblioteca.</p>
+          <p className="rounded-lg bg-amber-400/10 p-3 text-sm text-amber-100">Antes de armar el set, carguemos algunas canciones en la biblioteca de 360 worship.</p>
         ) : (
           <div className="grid gap-3">
-            <input value={query} onChange={(event) => setQuery(event.target.value)} className="min-h-11 rounded-lg border border-white/10 bg-black/20 px-3 text-white outline-none" placeholder="Buscar cancion" />
+            <input value={query} onChange={(event) => setQuery(event.target.value)} className="min-h-11 rounded-lg border border-white/10 bg-black/20 px-3 text-white outline-none" placeholder="Buscar canciones para esta parte" />
             <div className="max-h-[52vh] space-y-2 overflow-auto pr-1">
               {filteredSongs.map((song) => {
                 const selected = selectedSongIds.includes(song.id);

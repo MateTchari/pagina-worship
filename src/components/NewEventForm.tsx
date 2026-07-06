@@ -67,12 +67,12 @@ export function NewEventForm() {
     event.preventDefault();
 
     if (!title.trim() || !date || !time || !location.trim()) {
-      setMessage("Completa titulo, fecha, hora y lugar.");
+      setMessage("Nos falta ubicar el encuentro: titulo, fecha, hora y lugar.");
       return;
     }
 
     if (cleanSections.length === 0) {
-      setMessage("Agrega al menos una seccion o plenaria.");
+      setMessage("Dale al evento al menos una parte para ordenar el set.");
       return;
     }
 
@@ -94,7 +94,7 @@ export function NewEventForm() {
       router.refresh();
     } catch (error) {
       const detail = error instanceof Error ? error.message : JSON.stringify(error);
-      setMessage(`No se pudo guardar el evento: ${detail}`);
+      setMessage(`No pudimos guardar este encuentro todavia: ${detail}`);
     } finally {
       setLoading(false);
     }

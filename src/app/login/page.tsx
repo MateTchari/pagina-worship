@@ -14,8 +14,8 @@ export default async function LoginPage() {
       <section className="w-full">
         <div className="mx-auto mb-8 max-w-md text-center">
           <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-emerald-300">360 worship</p>
-          <h1 className="text-3xl font-semibold text-white">Entrar al cancionero interno</h1>
-          <p className="mt-3 text-slate-400">Login con Supabase Auth para admins y musicos del equipo.</p>
+          <h1 className="text-3xl font-semibold text-white">Entrar al espacio del equipo</h1>
+          <p className="mt-3 text-slate-400">Bienvenido a 360 worship. Preparar tambien es parte de servir.</p>
         </div>
         <SupabaseAuthPanel />
       </section>

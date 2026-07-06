@@ -20,7 +20,7 @@ export function SongEditor({ song, onDone }: { song?: Song | null; onDone?: () =
     event.preventDefault();
 
     if (!title.trim() || !lyricsAndNotes.trim()) {
-      setMessage("Completa titulo y letra con notas.");
+      setMessage("Nos falta lo esencial: titulo y letra con notas.");
       return;
     }
 
@@ -52,11 +52,11 @@ export function SongEditor({ song, onDone }: { song?: Song | null; onDone?: () =
         setLyricsAndNotes("");
       }
 
-      setMessage(song ? "Cancion actualizada." : "Cancion guardada.");
+      setMessage(song ? "Listo, esta cancion quedo afinada." : "Cancion guardada para el equipo.");
       router.refresh();
       onDone?.();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo guardar la cancion.");
+      setMessage(error instanceof Error ? error.message : "No pudimos guardar la cancion. Probemos de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -73,7 +73,7 @@ export function SongEditor({ song, onDone }: { song?: Song | null; onDone?: () =
         value={lyricsAndNotes}
         onChange={(event) => setLyricsAndNotes(event.target.value)}
         className="min-h-64 rounded-lg border border-white/10 bg-black/20 p-3 font-mono text-white outline-none"
-        placeholder={"Letra con acordes y notas\n\nEjemplo:\n[G]Grande es el Senor\n[D]Digno de alabar\n\nNotas: repetir coro dos veces"}
+        placeholder={"Letra con acordes y notas\n\nEjemplo:\n[G]Grande es el Senor\n[D]Digno de alabar\n\nNotas del equipo: repetir coro dos veces"}
         required
       />
       {message ? <p className="rounded-lg bg-amber-400/10 p-3 text-sm text-amber-100">{message}</p> : null}

@@ -49,7 +49,7 @@ export function EventSection({ section, canManage = false, reorderMode = false, 
             </div>
           </div>
         )) : (
-          <div className="p-5 text-sm text-slate-400">Todavia no hay canciones en esta seccion.</div>
+          <div className="p-5 text-sm text-slate-400">Esta parte todavia esta en silencio. Sumale canciones cuando este lista.</div>
         )}
       </div>
     </section>

@@ -8,7 +8,7 @@ export default async function SharePage({ params }: { params: Promise<{ id: stri
   const event = await getEventById(id);
 
   if (!event || !event.is_public) {
-    return <main className="grid min-h-screen place-items-center bg-[#101214] px-4 text-center text-white">Este evento es privado o no existe.</main>;
+    return <main className="grid min-h-screen place-items-center bg-[#101214] px-4 text-center text-white">Este link no esta disponible. Si es un evento de IBC, pedile al equipo que lo comparta de nuevo.</main>;
   }
 
   return (

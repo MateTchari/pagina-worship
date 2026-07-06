@@ -9,24 +9,24 @@ export function SupabaseAuthPanel() {
   const supabase = createSupabaseBrowserClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState(supabase ? "" : "Configura NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY para activar Auth.");
+  const [message, setMessage] = useState(supabase ? "" : "Todavia falta conectar las llaves de Supabase para abrir la puerta del equipo.");
   const [loading, setLoading] = useState(false);
 
   function validateForm() {
     const cleanEmail = email.trim();
 
     if (!cleanEmail || !password) {
-      setMessage("Completa email y contrasena antes de continuar.");
+      setMessage("Ponenos tu email y contrasena para saber que sos parte del equipo.");
       return null;
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
-      setMessage("Ingresa un email valido.");
+      setMessage("Ese email no parece estar bien escrito.");
       return null;
     }
 
     if (password.length < 6) {
-      setMessage("La contrasena debe tener al menos 6 caracteres.");
+      setMessage("La contrasena necesita al menos 6 caracteres.");
       return null;
     }
 
@@ -35,15 +35,15 @@ export function SupabaseAuthPanel() {
 
   function friendlyAuthError(error: string) {
     if (error.includes("Anonymous sign-ins are disabled")) {
-      return "Completa email y contrasena. Supabase rechazo un intento de registro anonimo.";
+      return "Falta email o contrasena. No podemos dejar entrar a alguien sin nombre.";
     }
 
     if (error.includes("Invalid login credentials")) {
-      return "Email o contrasena incorrectos.";
+      return "Ese email o contrasena no coincide. Probemos otra vez.";
     }
 
     if (error.includes("User already registered")) {
-      return "Ese email ya esta registrado. Proba iniciar sesion.";
+      return "Ese email ya esta en el equipo. Proba iniciar sesion.";
     }
 
     return error;
@@ -71,7 +71,7 @@ export function SupabaseAuthPanel() {
     const { error } = await supabase.auth.signUp(credentials);
     setLoading(false);
 
-    setMessage(error ? friendlyAuthError(error.message) : "Registro creado. Revisa tu email si Supabase requiere confirmacion.");
+    setMessage(error ? friendlyAuthError(error.message) : "Registro listo. Bienvenido a 360 worship.");
   }
 
   return (

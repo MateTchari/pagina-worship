@@ -25,9 +25,9 @@ export default async function DashboardPage() {
       <main className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6">
         <section className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
           <div>
-            <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-300">Panel del equipo</p>
-            <h1 className="mt-2 text-3xl font-semibold text-white sm:text-5xl">Eventos y canciones en un solo lugar</h1>
-            <p className="mt-3 max-w-2xl text-slate-400">Biblioteca propia cargada manualmente, eventos ordenados y modo tocar sin distracciones.</p>
+            <p className="text-sm font-medium uppercase tracking-[0.2em] text-emerald-300">360 worship - IBC</p>
+            <h1 className="mt-2 text-3xl font-semibold text-white sm:text-5xl">Listos para servir con excelencia</h1>
+            <p className="mt-3 max-w-2xl text-slate-400">Eventos, canciones y tonos del equipo en un mismo lugar, para llegar al ensayo con el corazon y la lista preparados.</p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
             {isAdmin ? <Link href="/events/new" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-emerald-400 px-4 font-medium text-slate-950"><CalendarPlus size={19} />Agregar evento</Link> : null}
@@ -46,10 +46,10 @@ export default async function DashboardPage() {
           <h2 className="mb-4 text-2xl font-semibold text-white">Proximos eventos</h2>
           {upcoming.length === 0 ? (
             <EmptyState
-              title="No hay eventos futuros"
+              title="Todavia no hay nada en agenda"
               action={isAdmin ? <Link href="/events/new" className="rounded-lg bg-emerald-400 px-4 py-3 font-medium text-slate-950">Crear evento</Link> : null}
             >
-              {isAdmin ? "Cuando cargues un evento futuro, va a aparecer aca." : "Cuando un admin cargue eventos futuros, van a aparecer aca."}
+              {isAdmin ? "Cuando IBC tenga una nueva reunion o ensayo, cargalo aca y el equipo lo va a ver." : "Cuando el equipo de 360 worship prepare un nuevo evento, lo vas a ver aca."}
             </EmptyState>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -61,8 +61,8 @@ export default async function DashboardPage() {
         <section>
           <h2 className="mb-4 text-2xl font-semibold text-white">Eventos pasados</h2>
           {past.length === 0 ? (
-            <EmptyState title="Todavia no hay eventos pasados">
-              Cuando pase la fecha y hora de un evento, va a aparecer en este historial.
+            <EmptyState title="El historial esta descansando">
+              Despues de cada evento, lo vamos a guardar aca para recordar lo que se preparo y volver a usarlo cuando haga falta.
             </EmptyState>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

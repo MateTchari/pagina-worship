@@ -67,7 +67,7 @@ export function FullscreenPerformanceMode({ event }: { event: WorshipEvent }) {
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
           <div>
             <p className="text-sm text-emerald-300">{event.title} - {active?.sectionName}</p>
-            <h1 className="text-2xl font-semibold sm:text-4xl">{active?.song.title ?? "Sin canciones"}</h1>
+            <h1 className="text-2xl font-semibold sm:text-4xl">{active?.song.title ?? "Esperando canciones"}</h1>
             {active ? <p className="mt-1 text-slate-400">Tono {currentKey} - {active.song.artist}</p> : null}
           </div>
           <div className="flex flex-wrap gap-2">
@@ -90,7 +90,7 @@ export function FullscreenPerformanceMode({ event }: { event: WorshipEvent }) {
           </div>
         </div>
         <div className={autoScroll ? "animate-[scrollSlow_50s_linear_infinite]" : ""}>
-          {active ? <ChordProViewer content={active.song.lyrics_chords} semitones={semitones} fontSize={fontSize} showChords={showChords} columns={2} /> : <p className="text-slate-400">Este evento no tiene canciones.</p>}
+          {active ? <ChordProViewer content={active.song.lyrics_chords} semitones={semitones} fontSize={fontSize} showChords={showChords} columns={2} /> : <p className="text-slate-400">Este set todavia no tiene canciones. Cuando esten cargadas, 360 worship las va a tener listas aca.</p>}
         </div>
       </div>
     </main>

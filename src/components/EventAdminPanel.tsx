@@ -49,7 +49,7 @@ export function EventAdminPanel({ event }: { event: WorshipEvent }) {
       setSections((current) => current.filter((item) => item.id !== section.id));
       router.refresh();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo eliminar la seccion.");
+      setMessage(error instanceof Error ? error.message : "No pudimos sacar esa seccion.");
     }
   }
 
@@ -57,12 +57,12 @@ export function EventAdminPanel({ event }: { event: WorshipEvent }) {
     formEvent.preventDefault();
 
     if (!title.trim() || !date || !time || !location.trim()) {
-      setMessage("Completa titulo, fecha, hora y lugar.");
+      setMessage("Para dejarlo bien preparado necesitamos titulo, fecha, hora y lugar.");
       return;
     }
 
     if (cleanSections.length === 0) {
-      setMessage("El evento necesita al menos una seccion.");
+      setMessage("Todo encuentro necesita al menos una parte para ordenar las canciones.");
       return;
     }
 
@@ -88,10 +88,10 @@ export function EventAdminPanel({ event }: { event: WorshipEvent }) {
         return updateEventSection(section.id, { name: section.name, order_index: index + 1 });
       }));
 
-      setMessage("Evento actualizado.");
+      setMessage("Listo, el evento quedo actualizado para el equipo.");
       router.refresh();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo actualizar el evento.");
+      setMessage(error instanceof Error ? error.message : "No pudimos actualizar el evento. Intentemos de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -107,7 +107,7 @@ export function EventAdminPanel({ event }: { event: WorshipEvent }) {
       router.push("/dashboard");
       router.refresh();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo eliminar el evento.");
+      setMessage(error instanceof Error ? error.message : "No pudimos eliminar el evento.");
       setLoading(false);
     }
   }
