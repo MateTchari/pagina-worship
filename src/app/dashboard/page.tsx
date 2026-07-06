@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/EmptyState";
 import { EventCard } from "@/components/EventCard";
 import { Navbar } from "@/components/Navbar";
+import { splitEventsByDate } from "@/lib/event-time";
 import { getCurrentUserProfile, getEvents } from "@/lib/queries";
 
 export default async function DashboardPage() {
@@ -15,7 +16,8 @@ export default async function DashboardPage() {
 
   const isAdmin = auth.profile?.role === "admin";
   const events = await getEvents();
-  const latest = events[0];
+  const { upcoming, past } = splitEventsByDate(events);
+  const latest = upcoming[0] ?? past[0];
 
   return (
     <>
@@ -35,23 +37,36 @@ export default async function DashboardPage() {
 
         {latest ? (
           <section className="rounded-lg border border-emerald-400/20 bg-emerald-400/10 p-4">
-            <p className="text-sm text-emerald-200">Acceso rapido al ultimo evento creado</p>
+            <p className="text-sm text-emerald-200">Acceso rapido</p>
             <Link href={`/events/${latest.id}`} className="mt-1 block text-2xl font-semibold text-white hover:text-emerald-200">{latest.title}</Link>
           </section>
         ) : null}
 
         <section>
           <h2 className="mb-4 text-2xl font-semibold text-white">Proximos eventos</h2>
-          {events.length === 0 ? (
+          {upcoming.length === 0 ? (
             <EmptyState
-              title="Todavia no hay eventos"
-              action={isAdmin ? <Link href="/events/new" className="rounded-lg bg-emerald-400 px-4 py-3 font-medium text-slate-950">Crear primer evento</Link> : null}
+              title="No hay eventos futuros"
+              action={isAdmin ? <Link href="/events/new" className="rounded-lg bg-emerald-400 px-4 py-3 font-medium text-slate-950">Crear evento</Link> : null}
             >
-              {isAdmin ? "Cuando cargues eventos, van a aparecer aca." : "Cuando un admin cargue eventos, van a aparecer aca."}
+              {isAdmin ? "Cuando cargues un evento futuro, va a aparecer aca." : "Cuando un admin cargue eventos futuros, van a aparecer aca."}
             </EmptyState>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {events.map((event) => <EventCard key={event.id} event={event} />)}
+              {upcoming.map((event) => <EventCard key={event.id} event={event} />)}
+            </div>
+          )}
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-2xl font-semibold text-white">Eventos pasados</h2>
+          {past.length === 0 ? (
+            <EmptyState title="Todavia no hay eventos pasados">
+              Cuando pase la fecha y hora de un evento, va a aparecer en este historial.
+            </EmptyState>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {past.map((event) => <EventCard key={event.id} event={event} muted />)}
             </div>
           )}
         </section>

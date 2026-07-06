@@ -21,12 +21,9 @@ export function AddSongToEventModal({
 }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
-  const [selectedSongId, setSelectedSongId] = useState("");
-  const [selectedKey, setSelectedKey] = useState("");
-  const [eventNotes, setEventNotes] = useState("");
+  const [selectedSongIds, setSelectedSongIds] = useState<string[]>([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const selectedSong = songs.find((song) => song.id === selectedSongId);
 
   const filteredSongs = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -34,30 +31,44 @@ export function AddSongToEventModal({
     return songs.filter((song) => [song.title, song.artist, song.tags.join(" ")].join(" ").toLowerCase().includes(normalized));
   }, [query, songs]);
 
-  async function saveSong() {
-    if (!section || !selectedSong) return;
+  const selectedSongs = useMemo(() => {
+    return selectedSongIds
+      .map((songId) => songs.find((song) => song.id === songId))
+      .filter((song): song is Song => Boolean(song));
+  }, [selectedSongIds, songs]);
+
+  function toggleSong(songId: string) {
+    setSelectedSongIds((current) => current.includes(songId) ? current.filter((id) => id !== songId) : [...current, songId]);
+  }
+
+  function closeAndReset() {
+    onClose();
+    setQuery("");
+    setSelectedSongIds([]);
+    setMessage("");
+  }
+
+  async function saveSongs() {
+    if (!section || selectedSongs.length === 0) return;
 
     setLoading(true);
     setMessage("");
 
     try {
-      await addSongToEvent({
-        event_id: eventId,
-        section_id: section.id,
-        song_id: selectedSong.id,
-        selected_key: selectedKey.trim() || selectedSong.default_key,
-        order_index: section.event_songs.length + 1,
-        event_notes: eventNotes.trim() || undefined,
-      });
+      for (const [index, song] of selectedSongs.entries()) {
+        await addSongToEvent({
+          event_id: eventId,
+          section_id: section.id,
+          song_id: song.id,
+          selected_key: song.default_key,
+          order_index: section.event_songs.length + index + 1,
+        });
+      }
 
-      onClose();
-      setQuery("");
-      setSelectedSongId("");
-      setSelectedKey("");
-      setEventNotes("");
+      closeAndReset();
       router.refresh();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "No se pudo agregar la cancion.");
+      setMessage(error instanceof Error ? error.message : "No se pudieron agregar las canciones.");
     } finally {
       setLoading(false);
     }
@@ -67,13 +78,13 @@ export function AddSongToEventModal({
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4">
-      <div className="w-full max-w-2xl rounded-lg border border-white/10 bg-[#171a1d] p-4">
+      <div className="w-full max-w-3xl rounded-lg border border-white/10 bg-[#171a1d] p-4">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-white">Agregar cancion</h2>
+            <h2 className="text-xl font-semibold text-white">Agregar canciones</h2>
             <p className="text-sm text-slate-400">{section.name}</p>
           </div>
-          <button title="Cerrar" onClick={onClose} className="rounded-lg bg-white/10 p-2 text-white"><X size={18} /></button>
+          <button title="Cerrar" onClick={closeAndReset} className="rounded-lg bg-white/10 p-2 text-white"><X size={18} /></button>
         </div>
 
         {songs.length === 0 ? (
@@ -81,27 +92,33 @@ export function AddSongToEventModal({
         ) : (
           <div className="grid gap-3">
             <input value={query} onChange={(event) => setQuery(event.target.value)} className="min-h-11 rounded-lg border border-white/10 bg-black/20 px-3 text-white outline-none" placeholder="Buscar cancion" />
-            <div className="max-h-52 space-y-2 overflow-auto">
-              {filteredSongs.map((song) => (
-                <button
-                  key={song.id}
-                  onClick={() => {
-                    setSelectedSongId(song.id);
-                    setSelectedKey(song.default_key);
-                  }}
-                  className={`w-full rounded-lg border p-3 text-left hover:bg-white/5 ${selectedSongId === song.id ? "border-emerald-400 bg-emerald-400/10" : "border-white/10"}`}
-                >
-                  <span className="block font-medium text-white">{song.title}</span>
-                  <span className="text-sm text-slate-400">{song.artist} - tono {song.default_key}</span>
-                </button>
-              ))}
+            <div className="max-h-[52vh] space-y-2 overflow-auto pr-1">
+              {filteredSongs.map((song) => {
+                const selected = selectedSongIds.includes(song.id);
+                return (
+                  <button
+                    key={song.id}
+                    onClick={() => toggleSong(song.id)}
+                    className={`flex w-full items-center gap-3 rounded-lg border p-3 text-left hover:bg-white/5 ${selected ? "border-emerald-400 bg-emerald-400/10" : "border-white/10"}`}
+                  >
+                    <span className={`flex size-5 shrink-0 items-center justify-center rounded border ${selected ? "border-emerald-300 bg-emerald-400 text-slate-950" : "border-white/20"}`}>
+                      {selected ? "✓" : ""}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block font-medium text-white">{song.title}</span>
+                      <span className="text-sm text-slate-400">{song.artist} - tono {song.default_key}</span>
+                    </span>
+                  </button>
+                );
+              })}
             </div>
-            <input value={selectedKey} onChange={(event) => setSelectedKey(event.target.value)} className="min-h-11 rounded-lg border border-white/10 bg-black/20 px-3 text-white outline-none" placeholder="Tono para este evento" />
-            <textarea value={eventNotes} onChange={(event) => setEventNotes(event.target.value)} className="min-h-24 rounded-lg border border-white/10 bg-black/20 p-3 text-white outline-none" placeholder="Notas especificas para este evento" />
             {message ? <p className="rounded-lg bg-amber-400/10 p-3 text-sm text-amber-100">{message}</p> : null}
-            <button disabled={!selectedSongId || loading} onClick={saveSong} className="min-h-11 rounded-lg bg-emerald-400 px-4 font-medium text-slate-950 disabled:cursor-not-allowed disabled:opacity-50">
-              {loading ? "Agregando..." : "Agregar a la seccion"}
-            </button>
+            <div className="flex flex-col justify-between gap-3 border-t border-white/10 pt-3 sm:flex-row sm:items-center">
+              <p className="text-sm text-slate-400">{selectedSongIds.length} seleccionadas</p>
+              <button disabled={selectedSongIds.length === 0 || loading} onClick={saveSongs} className="min-h-11 rounded-lg bg-emerald-400 px-4 font-medium text-slate-950 disabled:cursor-not-allowed disabled:opacity-50">
+                {loading ? "Agregando..." : `Agregar ${selectedSongIds.length || ""} canciones`}
+              </button>
+            </div>
           </div>
         )}
       </div>
