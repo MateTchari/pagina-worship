@@ -1,15 +1,35 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Eye, EyeOff, Maximize, Minus, Music2, Play, Plus, RotateCcw } from "lucide-react";
 import type { WorshipEvent } from "@/lib/types";
 import { ChordProViewer } from "@/components/ChordProViewer";
 import { semitoneDistance, transposeChord } from "@/lib/chordpro";
 
+const performanceFontSizeKey = "360-worship-performance-font-size";
+const minFontSize = 10;
+const maxFontSize = 64;
+const defaultFontSize = 28;
+const fontStep = 5;
+
+function clampFontSize(value: number) {
+  return Math.min(maxFontSize, Math.max(minFontSize, value));
+}
+
+function getInitialFontSize() {
+  if (typeof window === "undefined") return defaultFontSize;
+
+  const savedFontSize = window.localStorage.getItem(performanceFontSizeKey);
+  if (!savedFontSize) return defaultFontSize;
+
+  const parsedFontSize = Number(savedFontSize);
+  return Number.isFinite(parsedFontSize) ? clampFontSize(parsedFontSize) : defaultFontSize;
+}
+
 export function FullscreenPerformanceMode({ event }: { event: WorshipEvent }) {
   const songs = useMemo(() => event.event_sections.flatMap((section) => section.event_songs.map((eventSong) => ({ ...eventSong, sectionName: section.name }))), [event]);
   const [index, setIndex] = useState(0);
-  const [fontSize, setFontSize] = useState(28);
+  const [fontSize, setFontSize] = useState(getInitialFontSize);
   const [showChords, setShowChords] = useState(true);
   const [autoScroll, setAutoScroll] = useState(false);
   const [songKeyShifts, setSongKeyShifts] = useState<Record<string, number>>({});
@@ -17,9 +37,9 @@ export function FullscreenPerformanceMode({ event }: { event: WorshipEvent }) {
   const visualKeyShift = active ? songKeyShifts[active.id] ?? 0 : 0;
   const semitones = active ? semitoneDistance(active.song.default_key, active.selected_key) + visualKeyShift : 0;
   const currentKey = active ? transposeChord(active.selected_key, visualKeyShift) : "";
-  const minFontSize = 10;
-  const maxFontSize = 64;
-  const fontStep = 5;
+  useEffect(() => {
+    window.localStorage.setItem(performanceFontSizeKey, String(fontSize));
+  }, [fontSize]);
 
   function requestFullscreen() {
     document.documentElement.requestFullscreen?.();
@@ -62,8 +82,8 @@ export function FullscreenPerformanceMode({ event }: { event: WorshipEvent }) {
               <button title="Subir tono" onClick={() => changeActiveSongKey(1)} className="p-3 hover:bg-white/10"><Plus size={20} /></button>
               <button title="Volver al tono del evento" onClick={resetActiveSongKey} className="border-l border-white/10 p-3 hover:bg-white/10"><RotateCcw size={18} /></button>
             </div>
-            <button title="Disminuir letra" onClick={() => setFontSize(Math.max(minFontSize, fontSize - fontStep))} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><Minus size={20} /></button>
-            <button title="Aumentar letra" onClick={() => setFontSize(Math.min(maxFontSize, fontSize + fontStep))} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><Plus size={20} /></button>
+            <button title="Disminuir letra" onClick={() => setFontSize((current) => clampFontSize(current - fontStep))} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><Minus size={20} /></button>
+            <button title="Aumentar letra" onClick={() => setFontSize((current) => clampFontSize(current + fontStep))} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><Plus size={20} /></button>
             <button title="Mostrar u ocultar acordes" onClick={() => setShowChords(!showChords)} className="rounded-lg bg-white/10 p-3 hover:bg-white/20">{showChords ? <Eye size={20} /> : <EyeOff size={20} />}</button>
             <button title="Scroll automatico" onClick={() => setAutoScroll(!autoScroll)} className={`rounded-lg p-3 hover:bg-white/20 ${autoScroll ? "bg-emerald-400 text-slate-950" : "bg-white/10"}`}><Play size={20} /></button>
             <button title="Pantalla completa" onClick={requestFullscreen} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><Maximize size={20} /></button>
