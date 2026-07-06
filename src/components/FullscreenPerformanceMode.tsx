@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Eye, EyeOff, Maximize, Minus, Music2, Play, Plus, RotateCcw } from "lucide-react";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight, Eye, EyeOff, Maximize, Minus, Music2, Plus, RotateCcw, X } from "lucide-react";
 import type { WorshipEvent } from "@/lib/types";
 import { ChordProViewer } from "@/components/ChordProViewer";
 import { semitoneDistance, transposeChord } from "@/lib/chordpro";
@@ -31,7 +32,6 @@ export function FullscreenPerformanceMode({ event }: { event: WorshipEvent }) {
   const [index, setIndex] = useState(0);
   const [fontSize, setFontSize] = useState(getInitialFontSize);
   const [showChords, setShowChords] = useState(true);
-  const [autoScroll, setAutoScroll] = useState(false);
   const [songKeyShifts, setSongKeyShifts] = useState<Record<string, number>>({});
   const active = songs[index];
   const visualKeyShift = active ? songKeyShifts[active.id] ?? 0 : 0;
@@ -85,11 +85,13 @@ export function FullscreenPerformanceMode({ event }: { event: WorshipEvent }) {
             <button title="Disminuir letra" onClick={() => setFontSize((current) => clampFontSize(current - fontStep))} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><Minus size={20} /></button>
             <button title="Aumentar letra" onClick={() => setFontSize((current) => clampFontSize(current + fontStep))} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><Plus size={20} /></button>
             <button title="Mostrar u ocultar acordes" onClick={() => setShowChords(!showChords)} className="rounded-lg bg-white/10 p-3 hover:bg-white/20">{showChords ? <Eye size={20} /> : <EyeOff size={20} />}</button>
-            <button title="Scroll automatico" onClick={() => setAutoScroll(!autoScroll)} className={`rounded-lg p-3 hover:bg-white/20 ${autoScroll ? "bg-emerald-400 text-slate-950" : "bg-white/10"}`}><Play size={20} /></button>
             <button title="Pantalla completa" onClick={requestFullscreen} className="rounded-lg bg-white/10 p-3 hover:bg-white/20"><Maximize size={20} /></button>
+            <Link title="Salir del modo tocar" href={`/events/${event.id}`} className="rounded-lg bg-white/10 p-3 hover:bg-white/20">
+              <X size={20} />
+            </Link>
           </div>
         </div>
-        <div className={autoScroll ? "animate-[scrollSlow_50s_linear_infinite]" : ""}>
+        <div>
           {active ? <ChordProViewer content={active.song.lyrics_chords} semitones={semitones} fontSize={fontSize} showChords={showChords} columns={2} /> : <p className="text-slate-400">Este set todavia no tiene canciones. Cuando esten cargadas, 360 worship las va a tener listas aca.</p>}
         </div>
       </div>
