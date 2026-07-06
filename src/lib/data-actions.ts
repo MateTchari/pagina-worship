@@ -83,6 +83,14 @@ export async function addSongToEvent(input: { event_id: string; section_id: stri
   return data;
 }
 
+export async function updateEventSong(id: string, input: { selected_key?: string; event_notes?: string; order_index?: number }) {
+  const supabase = createSupabaseBrowserClient();
+  if (!supabase) throw new Error("Supabase no esta configurado.");
+  const { data, error } = await supabase.from("event_songs").update(input).eq("id", id).select().single();
+  if (error) throw error;
+  return data;
+}
+
 export async function createEventSection(input: { event_id: string; name: string; order_index: number }) {
   const supabase = createSupabaseBrowserClient();
   if (!supabase) throw new Error("Supabase no esta configurado.");

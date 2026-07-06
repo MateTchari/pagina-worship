@@ -1,4 +1,5 @@
 import { GripVertical, Music2, Plus } from "lucide-react";
+import { EventSongKeyEditor } from "@/components/EventSongKeyEditor";
 import type { EventSection as EventSectionType } from "@/lib/types";
 
 export function EventSection({ section, canManage = false, onAddSong }: { section: EventSectionType; canManage?: boolean; onAddSong?: () => void }) {
@@ -30,9 +31,12 @@ export function EventSection({ section, canManage = false, onAddSong }: { sectio
                 {eventSong.event_notes ? <p className="mt-2 text-sm text-amber-100">{eventSong.event_notes}</p> : null}
               </div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-slate-300">
-              <Music2 size={16} />
-              Tono {eventSong.selected_key}
+            <div className="flex flex-col gap-2 text-sm text-slate-300 sm:items-end">
+              <div className="flex items-center gap-2">
+                <Music2 size={16} />
+                Tono {eventSong.selected_key}
+              </div>
+              {canManage ? <EventSongKeyEditor eventSongId={eventSong.id} initialKey={eventSong.selected_key} /> : null}
             </div>
           </div>
         )) : (
