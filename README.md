@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 360 worship
 
-## Getting Started
+Web interna para organizar eventos, secciones/plenarias y canciones de un grupo de adoracion. La biblioteca es propia: las letras y acordes se cargan manualmente en formato ChordPro. No hay scraping, importacion automatica ni copia de contenido de sitios externos.
 
-First, run the development server:
+## Stack
+
+- Next.js + React + TypeScript
+- Tailwind CSS
+- Supabase Auth + Database + RLS
+- Deploy preparado para Vercel
+
+## Estado inicial
+
+El proyecto queda limpio: no trae eventos creados, no trae canciones cargadas y no incluye seeds de ejemplo. Al abrirlo sin datos vas a ver estados vacios hasta que configures Supabase y cargues tu propia informacion.
+
+## Funcionalidades incluidas
+
+- Login y registro con Supabase Auth.
+- Dashboard con proximos eventos, biblioteca y acceso rapido cuando existan datos.
+- Crear evento con tipos `VDM`, `CAMPA` y `OTRO`.
+- Secciones automaticas: VDM crea `Alabanzas` y `Adoraciones`; CAMPA crea plenarias.
+- Biblioteca con busqueda y filtros por categoria/tags.
+- Vista de evento con secciones, canciones, tonos y notas.
+- Modo tocar responsive con fondo oscuro, letra grande, pantalla completa, cambio de tamano, ocultar acordes, anterior/siguiente y scroll automatico.
+- Parser ChordPro y transposicion de acordes entre corchetes.
+- Vista publica para eventos compartidos.
+- SQL completo para tablas, indices, triggers y politicas RLS.
+
+## Correr localmente
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abrir `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Sin variables de Supabase, la app abre pero no muestra datos ni puede autenticar usuarios. Eso es intencional: tenes que conectar tu propio proyecto Supabase.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Lo que falta que hagas vos
 
-## Learn More
+1. Crear un proyecto en Supabase.
+2. Ejecutar `supabase/schema.sql` en el SQL Editor de Supabase.
+3. Copiar `Project URL` y `anon public key`.
+4. Crear `.env.local` con esas variables.
+5. Habilitar email/password en Supabase Authentication.
+6. Registrar tu primer usuario desde `/login`.
+7. En Supabase, cambiar el rol de ese usuario a `admin` en `users_profiles`.
+8. Cargar manualmente tus canciones y eventos desde la app.
+9. Subir el proyecto a GitHub.
+10. Importarlo en Vercel y agregar las mismas variables de entorno.
 
-To learn more about Next.js, take a look at the following resources:
+Variables:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://ttjekoazlizfeophadkd.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR0amVrb2F6bGl6ZmVvcGhhZGtkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3ODE4MTMsImV4cCI6MjA5MjM1NzgxM30.Iv8mV_WUIHgmCYWylcrAEzk61YjNbZXVOtQ4hLLutI0
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Roles
 
-## Deploy on Vercel
+Los roles viven en `users_profiles.role`:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `admin`: crea, edita y elimina eventos/canciones/secciones.
+- `musico`: lee eventos y canciones, y actualiza su propio `practice_status`.
+- `invitado`: solo lee eventos publicos mediante link compartido.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Para convertir un usuario en admin, actualiza su fila en `users_profiles`.
+
+## Deploy en Vercel
+
+1. Sube el proyecto a GitHub.
+2. Importa el repo en Vercel.
+3. Agrega `NEXT_PUBLIC_SUPABASE_URL`.
+4. Agrega `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+5. Ejecuta deploy.
+
+## Archivos importantes
+
+- `supabase/schema.sql`: tablas, indices, triggers y RLS.
+- `src/lib/chordpro.ts`: parser y transposicion.
+- `src/lib/data-actions.ts`: funciones `createEvent`, `createSong`, `addSongToEvent`, reorder, compartir, etc.
+- `src/lib/queries.ts`: lecturas reales desde Supabase.
+- `src/components/FullscreenPerformanceMode.tsx`: modo tocar.
+- `src/components/ChordProViewer.tsx`: render ChordPro.
+
+## Restricciones legales
+
+Esta app no scrapea, no descarga, no copia ni importa canciones automaticamente desde CifraClub ni desde ninguna web. `cifraclub_url`, `youtube_url` y `spotify_url` son campos opcionales de referencia.
