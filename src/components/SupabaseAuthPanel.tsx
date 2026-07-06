@@ -68,10 +68,15 @@ export function SupabaseAuthPanel() {
     if (!credentials) return;
 
     setLoading(true);
-    const { error } = await supabase.auth.signUp(credentials);
+    const { error } = await supabase.auth.signUp({
+      ...credentials,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
     setLoading(false);
 
-    setMessage(error ? friendlyAuthError(error.message) : "Registro listo. Bienvenido a 360 worship.");
+    setMessage(error ? friendlyAuthError(error.message) : "Registro listo. Revisa tu mail para confirmar y entrar a 360 worship.");
   }
 
   return (
