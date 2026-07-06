@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { Copy, ListOrdered, Play, Share2 } from "lucide-react";
+import { Play } from "lucide-react";
 import { redirect } from "next/navigation";
 import { EventDetailClient } from "@/components/EventDetailClient";
 import { Navbar } from "@/components/Navbar";
-import { makeSharePath } from "@/lib/event-helpers";
 import { getCurrentUserProfile, getEventById, getSongs } from "@/lib/queries";
 
 export default async function EventPage({ params }: { params: Promise<{ id: string }> }) {
@@ -35,9 +34,6 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
           </div>
           <div className="flex flex-wrap gap-2">
             <Link href={`/events/${event.id}/play`} className="inline-flex min-h-12 items-center gap-2 rounded-lg bg-emerald-400 px-4 font-medium text-slate-950"><Play size={18} />Modo tocar</Link>
-            {canManage ? <button className="inline-flex min-h-12 items-center gap-2 rounded-lg border border-white/10 px-4 font-medium text-white"><ListOrdered size={18} />Reordenar canciones</button> : null}
-            {canManage ? <Link href={makeSharePath(event.id)} className="inline-flex min-h-12 items-center gap-2 rounded-lg border border-white/10 px-4 font-medium text-white"><Share2 size={18} />Compartir</Link> : null}
-            {canManage ? <button className="inline-flex min-h-12 items-center gap-2 rounded-lg border border-white/10 px-4 font-medium text-white"><Copy size={18} />Copiar link</button> : null}
           </div>
         </section>
         <EventDetailClient event={event} songs={songs} canManage={canManage} />
