@@ -11,7 +11,7 @@ export default async function Home() {
         <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-xl bg-emerald-400 text-slate-950">
           <Music2 size={32} />
         </div>
-        <h1 className="mt-4 text-4xl font-semibold sm:text-6xl">Trabajen de buena gana en todo lo que hagan, como si fuera para el Señor y no para la gente.</h1>
+        <h1 className="mt-4 text-4xl font-semibold sm:text-6xl">WORSHIP 360</h1>
         <div className="mt-8 flex justify-center">
           <Link href={auth ? "/dashboard" : "/login"} className="rounded-lg bg-emerald-400 px-5 py-3 font-medium text-slate-950">
             {auth ? "Ir al dashboard" : "Entrar"}
